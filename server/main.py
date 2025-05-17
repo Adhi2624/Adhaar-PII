@@ -61,4 +61,9 @@ async def upload_file(file: UploadFile = File(...), type: str = Form(...)):
             "message":f"LLms Not found {e}"
         }
     os.remove(file_location)
-    return {parsedData,parserText,maskedimg}
+    return {
+    "json": parsedData,
+    "text": parserText,
+    "image": maskedimg
+}
+

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css'
-import { use } from 'react';
 function App() {
   const [fileData, setFileData] = useState({ file: null, type: '' });
   const [parsedOutput, setParsedOutput] = useState(null);
@@ -37,25 +36,25 @@ function App() {
     formdata.append('file', fileData.file);
     formdata.append('type', fileData.type);
 
-    try {
-      setUploading(true)
-      const res = await axios.post('http://localhost:8000/upload', formdata, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+   try {
+  setUploading(true);
+  const res = await axios.post('http://localhost:8000/upload', formdata, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
-      let raw = res.data;
-      const rawValue = Object.values(raw)[0]; 
-      console.log(res.data[1])
-      const parsedJson = JSON.parse(rawValue); 
-      setParsedOutput(parsedJson);
-      setParsedText(res.data[1])
-      setRetrivedImage(res.data[2])
-    } catch (err) {
-      console.error('Upload failed:', err);
-      alert('Something went wrong. Try again.');
-    }
+  const data = res.data;
+
+const parsedJson = JSON.parse(data.json);  // Parse only the JSON string
+setParsedOutput(parsedJson);
+setParsedText(data.text);
+setRetrivedImage(data.image);
+} catch (err) {
+  console.error('Upload failed:', err);
+  alert('Something went wrong. Try again.');
+}
+
     setUploading(false)
   };
 
@@ -94,8 +93,9 @@ function App() {
 
 {
   retrivedImage && (
-    <img src={retrivedImage} alt="retrived image" />
-  )
+  <img src={`data:image/png;base64,${retrivedImage}`} alt="retrived image" />
+)
+
 }
 
 {parsedText &&(
